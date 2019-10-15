@@ -69,21 +69,11 @@ void driveForward()
     }
   }
 
-  void turnRight()
-  {
-    if(isOn)
-    {
-      digitalWrite(pinLeftWheelBackward, HIGH);
-      digitalWrite(pinLeftWheelForward, HIGH);
-      digitalWrite(pinRightWheelBackward, HIGH);
-      digitalWrite(pinRightWheelForward, HIGH);
-    }
-  }
+  
 
 void setup() 
 {
   // put your setup code here, to run once:
-  pinMode(pinLeftWheelForward, OUTPUT);
   Serial.begin(38400);
   BlueTooth.begin(38400);
   
@@ -99,21 +89,19 @@ void loop()
     controlInput=BlueTooth.read();
     
   }
-  if(controlInput == 'w')
+  if(controlInput == 'q')
   {
-      
-      //drive forward
-      driveForward();
-      
-  }
-  else if(controlInput == 's')
-  {
-      driveBackward();
-  }
-  else if(controlInput == 'e')
-  {
-    stopRobot();
-    
+    //switches the isOn state from true to false or from false to true
+    isOn ^= true;
+    if(isOn)
+    {
+      BlueTooth.println("Bot is on");
+    }
+    else
+    {
+      BlueTooth.println("Bot is off");
+      stopRobot();
+    }
   }
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(1000);

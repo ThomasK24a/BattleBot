@@ -5,22 +5,30 @@ int pinLeftWheelBackward = 2;
 int pinRightWheelBackward = 4;
 int pinLeftWheelForward = 3;
 int pinRightWheelForward = 9;
+boolean isOn = false;
 
 void driveForward()
   {
-    digitalWrite(pinLeftWheelBackward, LOW);
-    digitalWrite(pinLeftWheelForward, HIGH);
-    digitalWrite(pinRightWheelBackward, LOW);
-    digitalWrite(pinRightWheelForward, HIGH);
+    if(isOn)
+    {
+      digitalWrite(pinLeftWheelBackward, LOW);
+      digitalWrite(pinLeftWheelForward, HIGH);
+      digitalWrite(pinRightWheelBackward, LOW);
+      digitalWrite(pinRightWheelForward, HIGH);
+    }
+    
     
   }
 
   void driveBackward()
   {
-    digitalWrite(pinLeftWheelBackward, HIGH);
-    digitalWrite(pinLeftWheelForward, LOW);
-    digitalWrite(pinRightWheelBackward, HIGH);
-    digitalWrite(pinRightWheelForward, LOW);
+    if(isOn)
+    {
+      digitalWrite(pinLeftWheelBackward, HIGH);
+      digitalWrite(pinLeftWheelForward, LOW);
+      digitalWrite(pinRightWheelBackward, HIGH);
+      digitalWrite(pinRightWheelForward, LOW);
+    }
     
   }
 
@@ -34,19 +42,26 @@ void driveForward()
 
   void turnLeft()
   {
-    digitalWrite(pinLeftWheelBackward, HIGH);
-    digitalWrite(pinLeftWheelForward, LOW);
-    digitalWrite(pinRightWheelBackward, LOW);
-    digitalWrite(pinRightWheelForward, HIGH);
+    if(isOn)
+    {
+      digitalWrite(pinLeftWheelBackward, LOW);
+      digitalWrite(pinLeftWheelForward, HIGH);
+      digitalWrite(pinRightWheelBackward, HIGH);
+      digitalWrite(pinRightWheelForward, LOW);
+    }
   }
   
   void turnRight()
   {
-    digitalWrite(pinLeftWheelBackward, LOW);
-    digitalWrite(pinLeftWheelForward, HIGH);
-    digitalWrite(pinRightWheelBackward, HIGH);
-    digitalWrite(pinRightWheelForward, LOW);
+    if(isOn)
+    {
+      digitalWrite(pinLeftWheelBackward, HIGH);
+      digitalWrite(pinLeftWheelForward, LOW);
+      digitalWrite(pinRightWheelBackward, HIGH);
+      digitalWrite(pinRightWheelForward, LOW);
+    }
   }
+
 
 void setup() 
 {
@@ -82,6 +97,4 @@ void loop()
     
   }
 
-  
-  delay(100);
 }
