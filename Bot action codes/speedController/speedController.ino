@@ -1,5 +1,6 @@
 char controlInput;
-int speed;
+int forwardSpeed;
+int backwardSpeed;
 #include <SoftwareSerial.h>
 SoftwareSerial BlueTooth(A0, A1);
 int pinLeftWheelBackward = 2;
@@ -12,8 +13,6 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(38400);
   BlueTooth.begin(38400);
-  
-  Serial.begin (9600);
 }
 
 void loop() 
@@ -26,20 +25,30 @@ void loop()
   switch(controlInput)
   {
     case 'q':
-      speed = 255;
+      forwardSpeed = 255;
+      backwardSpeed = 0;
       break;
     case 'w':
-      speed = 100;
+      forwardSpeed = 100;
+      backwardSpeed = 0;
       break;
     case 'e':
-      speed = 0;
+      forwardSpeed = 0;
+      backwardSpeed = 0;
       break;
-    
+    case 'a':
+      forwardSpeed = 0;
+      backwardSpeed = 255;
+      break;
+    case 's':
+      forwardSpeed = 0;
+      backwardSpeed = 100;
+      break;    
   }
-  analogWrite(pinLeftWheelBackward, 0);
-  analogWrite(pinLeftWheelForward, speed);
-  analogWrite(pinRightWheelBackward, 0);
-  analogWrite(pinRightWheelForward, speed);
+  analogWrite(pinLeftWheelBackward, backwardSpeed);
+  analogWrite(pinLeftWheelForward, forwardSpeed);
+  analogWrite(pinRightWheelBackward, backwardSpeed);
+  analogWrite(pinRightWheelForward, forwardSpeed);
 
   delay(500);
 }
