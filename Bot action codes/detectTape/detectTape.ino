@@ -11,5 +11,5 @@ void setup()
 void loop() 
 {
   sensorValueLeft = digitalRead(sensorPinLeft); // read the value from the sensor
-  Serial.println(sensorValueLeft == 1); //prints the values coming from the sensor on the screen
+  Serial.println(sensorValueLeft); //prints the values coming from the sensor on the screen
 }

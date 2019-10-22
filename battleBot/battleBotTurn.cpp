@@ -1,4 +1,5 @@
-//include libraries
+#include "Arduino.h"
+#include "BattleBotTurn.h"
 #include <SoftwareSerial.h>
 #include<Wire.h>
 
@@ -28,12 +29,19 @@ float degreesTurnedTotal = 0.0;
 float degreesTurned = 0;
 
 //Used by the gyroscope
-
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
 int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
 
+
+BattleBotTurn::BattleBotTurn()
+{
+    
+
+    
+}
+
 //will put the speed from leftSpeed and rightSpeed into the motors
-void setSpeed()
+void BattleBotTurn::setSpeed()
 {
   BlueTooth.println("Setting speed");
   if (leftSpeed > 0)
@@ -70,7 +78,7 @@ void setSpeed()
 }
 
 //will turn the bot for the set amount of degrees and the set speed, degrees is clockwise and minus will turn it countclockwise
-void turn(int speed, int degrees)
+void BattleBotTurn::turn(int speed, int degrees)
 {
   leftSpeed = 0;
   rightSpeed = 0;
@@ -136,7 +144,7 @@ void turn(int speed, int degrees)
 
 }
 
-void getAngle()
+void BattleBotTurn::getAngle()
 {
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
@@ -154,7 +162,7 @@ void getAngle()
   degreesTurned = GyZ / 1800;
 }
 
-void setup()
+void BattleBotTurn::setup()
 {
   // sets up a bluetooth connection
   Serial.begin(38400);
