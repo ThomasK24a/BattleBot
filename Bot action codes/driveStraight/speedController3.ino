@@ -1,16 +1,18 @@
-char controlInput = 'a';
-int leftSpeed = 0;
-int rightSpeed = 0;
+char controlInput = 'b';
+
+int leftSpeed = 2;
+int rightSpeed = 2;
 int leftSpeedInput = 100;
 int rightSpeedInput = 100;
+
 int degreesTurned = 0;
+
 unsigned long currentTime;
-unsigned long previousTime = 0;
+unsigned long previousTime;
 
 #include<Wire.h>
 const int MPU_addr = 0x68; // I2C address of the MPU-6050
 int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
-
 
 #include <SoftwareSerial.h>
 SoftwareSerial BlueTooth(A0, A1);
@@ -21,16 +23,19 @@ int pinRightWheelForward = 9;
 
 void setSpeed()
 {
+  BlueTooth.println("Setting speed");
   if (leftSpeed > 0)
   {
     leftSpeedInput = leftSpeed * 25;
     //leftSpeedInput = 119;
+    BlueTooth.println(leftSpeedInput);
     analogWrite(pinLeftWheelBackward, 0);
     analogWrite(pinLeftWheelForward, leftSpeedInput);
   }
   else
   {
     leftSpeedInput = leftSpeed * -25;
+    BlueTooth.println(leftSpeedInput);
     analogWrite(pinLeftWheelBackward, leftSpeedInput);
     analogWrite(pinLeftWheelForward, 0);
   }
@@ -39,22 +44,30 @@ void setSpeed()
   {
     rightSpeedInput = rightSpeed * 23;
     //rightSpeedInput = 110;
+    BlueTooth.println(rightSpeedInput);
     analogWrite(pinRightWheelBackward, 0);
     analogWrite(pinRightWheelForward, rightSpeedInput);
   }
   else
   {
     rightSpeedInput = rightSpeed * -23;
+    BlueTooth.println(rightSpeedInput);
     analogWrite(pinRightWheelBackward, rightSpeedInput);
     analogWrite(pinRightWheelForward, 0);
   }
 }
 
-void turn(int speed, int degrees) {
+void turn(int speed, int degrees) 
+{
+  leftSpeed = 0;
+  rightSpeed = 0;
+  setSpeed();
+  delay(500);
   //Degrees is clockwise
   BlueTooth.println("Degrees about to turn: ");
   BlueTooth.println(degrees);
-  
+
+  previousTime = 0;
   float temp = 0.0;
   degreesTurned = 0;
   if (degrees > 0)
@@ -83,6 +96,7 @@ void turn(int speed, int degrees) {
   else
   {
     rightSpeed = speed;
+    degrees = -degrees;
     while (temp < degrees)
     {
       currentTime = millis();
@@ -102,37 +116,57 @@ void turn(int speed, int degrees) {
 
     }
   }
-
-  
-  rightSpeed = 0;
+  BlueTooth.println("Finished turning");
   leftSpeed = 0;
+  rightSpeed = 0;
   setSpeed();
+  delay(500);
+  
 }
 
-void driveForward(int speed)
-{
-  boolean condition = true;
-  
-  while(condition)
-  {
+void driveForward()
+{  
+  float divergence = 0.0;
+  while(true)
+  {  
     leftSpeed = 4;
     rightSpeed = 4;
-    setSpeed;
+    setSpeed();
+
     
+    currentTime = millis();
+    if ((currentTime - previousTime) > 50)
+    {
+      divergence += degreesTurned;
+      previousTime = currentTime;
+    }
     getAngle();
 
-    if(degreesTurned > 5)
-    {
-      turn(4,-degreesTurned);
-    }
-    else if(degreesTurned < -5)
-    {
-      turn(4,-degreesTurned);
-    }
+
+    BlueTooth.println("Degrees turned: ");
+    BlueTooth.println(divergence);
     
+
+    
+    if (divergence > 15)
+    {
+      BlueTooth.println("disruption detected, turning left this amount of degrees:");
+      BlueTooth.println(divergence);
+      turn(6, -divergence);
+      divergence = 0;
+    }
+    else if (divergence < -15)
+    {
+      BlueTooth.println("disruption detected, turning right this amount of degrees:");
+      BlueTooth.println(divergence);
+      turn(6, divergence);
+      divergence = 0;
+    }
+    delay(10);
   }
   
-  
+
+
 }
 void getAngle()
 {
@@ -166,36 +200,23 @@ void setup()
 
 void loop()
 {
-  turn(
-//  turn(4,180);
-//  switch (controlInput)
-//  {
-//    case 'a':
-//      turn(4, 180);
-//      controlInput = 'q';
-//    case 'q':
-//      leftSpeed = 0;
-//      rightSpeed = 0;
-//      break;
-//    
-//  }
-
+ 
   if (BlueTooth.available())
   {
     controlInput = BlueTooth.read();
-
+  
   }
-
-
-
-
-  setSpeed();
-
-
-  //  BlueTooth.println("left wheel: ");
-  //  BlueTooth.println(leftSpeed);
-  //  BlueTooth.println(" right wheel: ");
-  //  BlueTooth.println(rightSpeed);
-  BlueTooth.println(controlInput);
+  if(controlInput == 'c')
+  {
+    
+    driveForward();
+    controlInput = 'b';
+  }
+ if(controlInput == 'd')
+  {
+    
+    turn(4, -15);
+    controlInput = 'b';
+  }
   delay(500);
 }

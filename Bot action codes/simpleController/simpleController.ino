@@ -8,12 +8,6 @@ int pinLeftWheelForward = 3;
 int pinRightWheelForward = 9;
 boolean isOn = false;
 
-#define trigPin 13
-#define echoPin 12
-
-int duration;
-int distance;
-  
 
 void driveForward()
   {
@@ -79,8 +73,6 @@ void setup()
   BlueTooth.begin(38400);
   
   Serial.begin (9600);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
 }
 
 void loop() 
@@ -127,47 +119,5 @@ void loop()
     case 'f': 
       robotSpeed = 140;
       break;
-  }
-//  if(controlInput == 'q')
-//  {
-//    //switches the isOn state from true to false or from false to true
-//    isOn ^= true;
-//    if(isOn)
-//    {
-//      BlueTooth.println("Bot is on");
-//    }
-//    else
-//    {
-//      BlueTooth.println("Bot is off");
-//      stopRobot();
-//    }
-//  }
-//  digitalWrite(trigPin, HIGH);
-//  delayMicroseconds(1000);
-//  digitalWrite(trigPin, LOW);
-//  duration = pulseIn(echoPin, HIGH);
-//  distance = (duration/2) / 29.1;
-//
-//  if (distance >= 200 || distance <= 0)
-//  {
-//    BlueTooth.println("Out of range \r\n");
-//    //BlueTooth.println(distance);
-//    //BlueTooth.println(" cm \r\n");
-//  } 
-//  else
-//  {
-//    BlueTooth.println(distance);
-//    BlueTooth.println(" cm \r\n");
-//  }
-//
-//  if (distance >= 25)
-//  {
-//    driveForward();
-//  }
-//  else
-//  {
-//    turnLeft();
-//  }
-  
-  delay(100);
+  }  
 }
