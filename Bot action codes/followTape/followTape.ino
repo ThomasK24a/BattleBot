@@ -13,6 +13,7 @@ int pinSensorRight = 11;
 int pinTrigger = 13;
 int pinEcho = 12;
 
+//Used by turning
 unsigned long previousTime = 0;
 unsigned long currentTime;
 float degreesTurnedTotal = 0.0;
@@ -123,31 +124,31 @@ void loop()
   if(sensorValueLeft == 1 && sensorValueRight == 1)
   {
     bb.adjustSpeed(-6,-6);
-    delay(50);
+    delay(30);
     bb.adjustSpeed(0,0);
-    delay(100);
+    delay(50);
   }
   else if(sensorValueLeft == 1)
   {
-    //go left
-    turn(6, 5);
+    //go right
+    turn(8, 5);
     delay(100);
     bb.adjustSpeed(-6,-6);
-    delay(100);
+    delay(80);
   }
   else if(sensorValueRight == 1)
   {
-    //go right
+    //go left
     turn(6, -5);
     delay(100);
     bb.adjustSpeed(-6,-6);
-    delay(100);
+    delay(80);
   }
   else
   {
     //go straight
     bb.adjustSpeed(4,4);
-    delay(50);
+    delay(10);
 
   }  
 

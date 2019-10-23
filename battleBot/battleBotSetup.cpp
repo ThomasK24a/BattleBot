@@ -33,28 +33,28 @@ void BattleBotSetup::adjustSpeed(int newLeftSpeed, int newRightSpeed)
 //will put the speed from leftSpeed and rightSpeed into the motors
 void BattleBotSetup::setSpeed()
 {
-  if (leftSpeed > 0)
+  if (leftSpeed >= 0)
   {
-    leftSpeedInput = leftSpeed * 25;
+    leftSpeedInput = leftSpeed * 10;
     analogWrite(pinLeftWheelBackward, 0);
     analogWrite(pinLeftWheelForward, leftSpeedInput);
   }
   else
   {
-    leftSpeedInput = leftSpeed * -25;
+    leftSpeedInput = 255;
     analogWrite(pinLeftWheelBackward, leftSpeedInput);
     analogWrite(pinLeftWheelForward, 0);
   }
 
-  if (rightSpeed > 0)
+  if (rightSpeed >= 0)
   {
-    rightSpeedInput = rightSpeed * 23;
+    rightSpeedInput = rightSpeed * 25;
     analogWrite(pinRightWheelBackward, 0);
     analogWrite(pinRightWheelForward, rightSpeedInput);
   }
   else
   {
-    rightSpeedInput = rightSpeed * -23;
+    rightSpeedInput = 255;
     analogWrite(pinRightWheelBackward, rightSpeedInput);
     analogWrite(pinRightWheelForward, 0);
   }
