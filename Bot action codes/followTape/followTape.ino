@@ -1,4 +1,7 @@
+#include <Wire.h>
+#include <SoftwareSerial.h>
 #include <battleBotSetup.h>
+
 
 int sensorValueLeft;
 int sensorValueRight;
@@ -6,14 +9,10 @@ boolean firstTime = true;
 
 BattleBotSetup bb;
 
-//#include <SoftwareSerial.h>
-//SoftwareSerial BlueTooth(A0, A1);
-
 void setup() 
 {
-  //BlueTooth.begin(38400);
-  // put your setup code here, to run once:
   Serial.begin(9600); //sets serial port for communication
+
 }
 
 void loop() 
@@ -52,7 +51,10 @@ void loop()
 //    bb.turn(4,15);
 //    firstTime = false;
 //  }
-  
-  bb.blueToothPrint();
-  
+  bb.adjustSpeed(4,4);
+  Serial.println(bb.getLeftSpeed());
+  delay(500);
+  bb.adjustSpeed(6,6);
+  Serial.println(bb.getLeftSpeed());
+  delay(500);
 }
