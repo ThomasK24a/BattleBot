@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "BattleBotTurn.h"
+#include "BattleBotSetup.h"
 #include <SoftwareSerial.h>
 #include<Wire.h>
 
@@ -33,29 +33,50 @@ const int MPU_addr = 0x68; // I2C address of the MPU-6050
 int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
 
 
-BattleBotTurn::BattleBotTurn()
+BattleBotSetup::BattleBotSetup()
 {
-    
+	_pinLeftWheelBackward = pinLeftWheelBackward;
+	_pinRightWheelBackward = pinRightWheelBackward;
+	_pinLeftWheelForward = pinLeftWheelForward;
+	_pinRightWheelForward = pinRightWheelForward;
+	_pinSensorLeft = pinSensorLeft;
+	_pinSensorRight = pinSensorRight;
+	_pinTrigger = pinTrigger;
+	_pinEcho = pinEcho;
 
     
 }
 
-//will put the speed from leftSpeed and rightSpeed into the motors
-void BattleBotTurn::setSpeed()
+
+void BattleBotSetup::adjustSpeed(int newLeftSpeed, int newRightSpeed)
 {
-  BlueTooth.println("Setting speed");
+	leftSpeed = newLeftSpeed;
+	rightSpeed = newRightSpeed;
+	setSpeed();
+}
+
+void BattleBotSetup::blueToothPrint()
+{
+	BlueTooth.println("sup");
+
+}
+
+//will put the speed from leftSpeed and rightSpeed into the motors
+void BattleBotSetup::setSpeed()
+{
+  //BlueTooth.println("Setting speed");
   if (leftSpeed > 0)
   {
     leftSpeedInput = leftSpeed * 25;
     //leftSpeedInput = 119;
-    BlueTooth.println(leftSpeedInput);
+    //BlueTooth.println(leftSpeedInput);
     analogWrite(pinLeftWheelBackward, 0);
     analogWrite(pinLeftWheelForward, leftSpeedInput);
   }
   else
   {
     leftSpeedInput = leftSpeed * -25;
-    BlueTooth.println(leftSpeedInput);
+    //BlueTooth.println(leftSpeedInput);
     analogWrite(pinLeftWheelBackward, leftSpeedInput);
     analogWrite(pinLeftWheelForward, 0);
   }
@@ -64,34 +85,32 @@ void BattleBotTurn::setSpeed()
   {
     rightSpeedInput = rightSpeed * 23;
     //rightSpeedInput = 110;
-    BlueTooth.println(rightSpeedInput);
+    //BlueTooth.println(rightSpeedInput);
     analogWrite(pinRightWheelBackward, 0);
     analogWrite(pinRightWheelForward, rightSpeedInput);
   }
   else
   {
     rightSpeedInput = rightSpeed * -23;
-    BlueTooth.println(rightSpeedInput);
+    //BlueTooth.println(rightSpeedInput);
     analogWrite(pinRightWheelBackward, rightSpeedInput);
     analogWrite(pinRightWheelForward, 0);
   }
 }
 
 //will turn the bot for the set amount of degrees and the set speed, degrees is clockwise and minus will turn it countclockwise
-void BattleBotTurn::turn(int speed, int degrees)
+void BattleBotSetup::turn(int speed, int degrees)
 {
-  leftSpeed = 0;
-  rightSpeed = 0;
-  setSpeed();
+  adjustSpeed(0,0);
   delay(100);
-  BlueTooth.println("Degrees about to turn: ");
-  BlueTooth.println(degrees);
+  //BlueTooth.println("Degrees about to turn: ");
+  //BlueTooth.println(degrees);
   
   
   //decides whether it has to turn clockwise or counterclockwise
   if (degrees > 0)
   {
-    leftSpeed = speed;
+	adjustSpeed(speed,0);
     degrees = -degrees;
     //will keep turning until degreesTurnedTotal is higher than the amount of degrees it has to turn
     while (degreesTurnedTotal > degrees)
@@ -105,9 +124,8 @@ void BattleBotTurn::turn(int speed, int degrees)
       }
       getAngle();
 
-      BlueTooth.println("Degrees turned: ");
-      BlueTooth.println(degreesTurnedTotal);
-      setSpeed();
+      //BlueTooth.println("Degrees turned: ");
+      //BlueTooth.println(degreesTurnedTotal);
 
       delay(10);
 
@@ -116,7 +134,7 @@ void BattleBotTurn::turn(int speed, int degrees)
   else
   {
     //same as above but counterclockwise
-    rightSpeed = speed;
+    adjustSpeed(0,speed);
     degrees = -degrees;
     while (degreesTurnedTotal < degrees)
     {
@@ -129,22 +147,19 @@ void BattleBotTurn::turn(int speed, int degrees)
       }
       
       getAngle();
-      BlueTooth.println("Degrees turned: ");
-      BlueTooth.println(degreesTurnedTotal);
-      setSpeed();
+      //BlueTooth.println("Degrees turned: ");
+      //BlueTooth.println(degreesTurnedTotal);
       delay(10);
 
     }
   }
-  BlueTooth.println("Finished turning");
-  leftSpeed = 0;
-  rightSpeed = 0;
-  setSpeed();
+  //BlueTooth.println("Finished turning");
+  adjustSpeed(0,0);
   delay(500);
 
 }
 
-void BattleBotTurn::getAngle()
+void BattleBotSetup::getAngle()
 {
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
@@ -162,11 +177,11 @@ void BattleBotTurn::getAngle()
   degreesTurned = GyZ / 1800;
 }
 
-void BattleBotTurn::setup()
+void BattleBotSetup::setup()
 {
   // sets up a bluetooth connection
-  Serial.begin(38400);
-  BlueTooth.begin(38400);
+  //Serial.begin(38400);
+  //BlueTooth.begin(38400);
 
   //used for the gyroscope
   Wire.begin();

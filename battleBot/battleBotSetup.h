@@ -1,11 +1,13 @@
-#ifndef BattleBotTurn_H
-#define BattleBotTurn_H
+#ifndef BattleBotSetup_H
+#define BattleBotSetup_H
 
 
-class BattleBotTurn
+class BattleBotSetup
 {
 public:
-    BattleBotTurn();
+    BattleBotSetup();
+	
+	void adjustSpeed(int leftSpeed, int rightSpeed);
 	
 	//will put the speed from leftSpeed and rightSpeed into the motors
 	void setSpeed();
@@ -17,6 +19,17 @@ public:
 	void getAngle();
     
 	void setup();
+	
+	void blueToothPrint();
+	
+	int _pinLeftWheelBackward;
+	int _pinRightWheelBackward;
+	int _pinLeftWheelForward;
+	int _pinRightWheelForward;
+	int _pinSensorLeft;
+	int _pinSensorRight;
+	int _pinTrigger;
+	int _pinEcho;
 	
 private:
     
