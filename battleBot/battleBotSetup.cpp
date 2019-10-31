@@ -24,9 +24,12 @@ BattleBotSetup::BattleBotSetup()
 
 void BattleBotSetup::adjustSpeed(int newLeftSpeed, int newRightSpeed)
 {
-	leftSpeed = newLeftSpeed;
-	rightSpeed = newRightSpeed;
-	setSpeed();
+	if(!(newLeftSpeed > 10 || newLeftSpeed < -10 || newRightSpeed > 10 || newRightSpeed <-10))
+	{
+		leftSpeed = newLeftSpeed;
+		rightSpeed = newRightSpeed;
+		setSpeed();
+	}
 }
 
 
@@ -35,15 +38,15 @@ void BattleBotSetup::setSpeed()
 {
   if (leftSpeed >= 0)
   {
-    leftSpeedInput = leftSpeed * 10;
+    leftSpeedInput = leftSpeed * 25;
     analogWrite(pinLeftWheelBackward, 0);
     analogWrite(pinLeftWheelForward, leftSpeedInput);
   }
   else
   {
-    leftSpeedInput = 255;
-    analogWrite(pinLeftWheelBackward, leftSpeedInput);
-    analogWrite(pinLeftWheelForward, 0);
+    leftSpeedInput = (10 + leftSpeed) * 25;
+    analogWrite(pinLeftWheelBackward, 255);
+	analogWrite(pinLeftWheelForward, leftSpeedInput);
   }
 
   if (rightSpeed >= 0)
@@ -54,9 +57,9 @@ void BattleBotSetup::setSpeed()
   }
   else
   {
-    rightSpeedInput = 255;
-    analogWrite(pinRightWheelBackward, rightSpeedInput);
-    analogWrite(pinRightWheelForward, 0);
+    rightSpeedInput = (10 + rightSpeed) * 25;
+    analogWrite(pinRightWheelBackward, 255);
+    analogWrite(pinRightWheelForward, rightSpeedInput);
   }
 }
 
