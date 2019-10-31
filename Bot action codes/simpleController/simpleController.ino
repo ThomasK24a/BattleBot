@@ -1,5 +1,5 @@
 char controlInput;
-int robotSpeed;
+int robotSpeed = 120;
 #include <SoftwareSerial.h>
 SoftwareSerial BlueTooth(A0, A1);
 int pinLeftWheelBackward = 2;
