@@ -132,21 +132,29 @@ void loop()
       {
         case 'y':
           currentChallenge = "Navigate";
+          BlueTooth.println("Challenge changed to navigate to next challenge");
           break;
         case 'u':
           currentChallenge = "Tape";
+          BlueTooth.println("Challenge changed to follow the tape");
           break;
         case 'i':
           currentChallenge = "Maze";
+          BlueTooth.println("Challenge changed to navigate out the maze");
           break;
         case 'o':
           currentChallenge = "Balloon";
+          BlueTooth.println("Challenge changed to pop the balloon");
           break;
       }
+      BlueTooth.println("Currently no challenge selected");
+      delay(100);
+
   }
   if(controlInput == 'p')
   {
     currentChallenge = "none";
+    BlueTooth.println("Challenge changed to none");
   }
 
   if(currentChallenge == "Navigate")
@@ -160,8 +168,9 @@ void loop()
       sensorValueRight = digitalRead(pinSensorRight); // read the value from the sensor
       bb.adjustSpeed(4,4);
     }
-    
+    bb.adjustSpeed(0,0);
     currentChallenge = "none";
+    BlueTooth.println("Reached destination");
   }
   
   if(currentChallenge == "Tape")
@@ -263,10 +272,10 @@ void loop()
         robotSpeed = 0;
         break;
       case 'f': 
-        robotSpeed = 150;
+        robotSpeed = 5;
         break;
       case 'r':
-        robotSpeed = 255;
+        robotSpeed = 10;
         break;
       case 'z':
         turn(10, 180);
