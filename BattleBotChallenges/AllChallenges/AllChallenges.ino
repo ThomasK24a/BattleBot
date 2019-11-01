@@ -14,7 +14,8 @@ int pinTrigger = 13;
 int pinEcho = 12;
 
 char controlInput;
-String currentChallenge = "none";
+String currentChallenge = "Balloon";
+int robotSpeed = 5;
 
 //Used by turning
 unsigned long previousTime = 0;
@@ -128,32 +129,39 @@ void loop()
 
   while(currentChallenge == "none")
   {
-      switch(controlInput)
-      {
-        case 'y':
-          currentChallenge = "Navigate";
-          BlueTooth.println("Challenge changed to navigate to next challenge");
-          break;
-        case 'u':
-          currentChallenge = "Tape";
-          BlueTooth.println("Challenge changed to follow the tape");
-          break;
-        case 'i':
-          currentChallenge = "Maze";
-          BlueTooth.println("Challenge changed to navigate out the maze");
-          break;
-        case 'o':
-          currentChallenge = "Balloon";
-          BlueTooth.println("Challenge changed to pop the balloon");
-          break;
-      }
-      BlueTooth.println("Currently no challenge selected");
-      delay(100);
+
+    if(BlueTooth.available())
+    {
+      controlInput=BlueTooth.read();    
+    }
+    
+    switch(controlInput)
+    {
+      case 'y':
+        currentChallenge = "Navigate";
+        BlueTooth.println("Challenge changed to navigate to next challenge");
+        break;
+      case 'u':
+        currentChallenge = "Tape";
+        BlueTooth.println("Challenge changed to follow the tape");
+        break;
+      case 'i':
+        currentChallenge = "Maze";
+        BlueTooth.println("Challenge changed to navigate out the maze");
+        break;
+      case 'o':
+        currentChallenge = "Balloon";
+        BlueTooth.println("Challenge changed to pop the balloon");
+        break;
+    }
+    BlueTooth.println("Currently no challenge selected");
+    delay(100);
 
   }
   if(controlInput == 'p')
   {
     currentChallenge = "none";
+    bb.adjustSpeed(0,0);
     BlueTooth.println("Challenge changed to none");
   }
 
@@ -251,25 +259,28 @@ void loop()
 
   if(currentChallenge == "Balloon")
   {
-    int robotSpeed = 5;
+    
     switch(controlInput)
     {        
-      case 'w':
+      case 'F':
         bb.adjustSpeed(robotSpeed , robotSpeed);
-        BlueTooth.println("Going forward");
+        Serial.println("Going forward");
         break;
-      case 'a':
+      case 'R':
         bb.adjustSpeed(robotSpeed, -robotSpeed);
+        Serial.println("Going right");
         break;
-      case 's':
+      case 'B':
         bb.adjustSpeed(-robotSpeed, -robotSpeed);
-        BlueTooth.println("Going backwards");
+        Serial.println("Going backwards");
         break;
-      case 'd':
+      case 'L':
         bb.adjustSpeed(-robotSpeed, robotSpeed);
+        Serial.println("Going left");
         break;
-      case 'q':
-        robotSpeed = 0;
+      case 'S':
+        bb.adjustSpeed(0,0);
+        Serial.println("Stopping");
         break;
       case 'f': 
         robotSpeed = 5;
@@ -282,7 +293,6 @@ void loop()
         break;
     }
     delay(50);
-    bb.adjustSpeed(0,0);  
   }
   
 }
