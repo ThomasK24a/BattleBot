@@ -14,8 +14,8 @@ int pinTrigger = 13;
 int pinEcho = 12;
 
 char controlInput;
-String currentChallenge = "Balloon";
-int robotSpeed = 5;
+String currentChallenge = "Maze";
+int robotSpeed = 7;
 
 //Used by turning
 unsigned long previousTime = 0;
@@ -230,22 +230,22 @@ void loop()
     if(sensorValueLeft == 1 && sensorValueRight == 1)
     {
       bb.adjustSpeed(-6,-6);
-      delay(150);
-      bb.adjustSpeed(0,0);
+      delay(400);
+      turn(6, 90);
       
     }
     else if(sensorValueLeft == 1)
     {
       bb.adjustSpeed(-6,-6);
-      delay(100);
-      turn(6, -5);
+      delay(250);
+      turn(6, -15);
       
     }
     else if(sensorValueRight == 1)
     {
       bb.adjustSpeed(-6,-6);
-      delay(100);
-      turn(6, 5);
+      delay(250);
+      turn(6, 15);
       
     }
     else
@@ -281,15 +281,6 @@ void loop()
       case 'S':
         bb.adjustSpeed(0,0);
         Serial.println("Stopping");
-        break;
-      case 'f': 
-        robotSpeed = 5;
-        break;
-      case 'r':
-        robotSpeed = 10;
-        break;
-      case 'z':
-        turn(10, 180);
         break;
     }
     delay(50);
